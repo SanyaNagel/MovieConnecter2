@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -15,60 +16,44 @@ namespace MovieConnecter2
 
         }
 
-        //Делаем и возращаем скриншот заданной области
-        public Bitmap getScreen()
-        {
-            Bitmap bmp = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height); //PixelFormat.Format32bppArgb);
-            Graphics graph = Graphics.FromImage(bmp);
-            graph.CopyFromScreen(0, 0, 0, 0, bmp.Size);
-            //Invert(bmp);
-            //bmp.Save("filename.jpg");   ///////////////////Потом убрать///////////////////////
-            graph.Dispose();
-            return bmp;
-        }
         
-        public int getHashScreen()
+        public long getHashScreen()
         {
-            Bitmap bmpImg = getScreen();                    //Получаем скрин экрана
-            bmpImg = new Bitmap(bmpImg, new Size(8, 8));    //Уменьшаем размер
+            int sizeBitmap = 8;
+            Bitmap bmpImg1 = getScreen();                    //Получаем скрин экрана
+            Bitmap bmpImg = new Bitmap(bmpImg1, new Size(sizeBitmap, sizeBitmap));    //Уменьшаем размер
+            bmpImg1.Dispose();   //Освобождение памяти
             
-            Bitmap result = new Bitmap(bmpImg.Width, bmpImg.Height);
-            Color color = new Color();
+            int count = 0;
+            Color color;
+            BitArray bits = new BitArray(sizeBitmap * sizeBitmap);
             for (int j = 0; j < bmpImg.Height; j++)
             {
                 for (int i = 0; i < bmpImg.Width; i++)
                 {
                     color = bmpImg.GetPixel(i, j);
                     int K = (color.R + color.G + color.B) / 3;
-                    result.SetPixel(i, j, K <= 64 ? Color.Black : Color.White);
+                    bits[count++] = K <= 64 ? true : false;
                 }
             }
 
-
-            //////////////Нужно исправить получение хэша///////////////
-            ///
-            int has = result.GetHashCode();
+            var bytes = new byte[8];
+            bits.CopyTo(bytes, 0);
+            var has = BitConverter.ToInt64(bytes, 0);
+            
             bmpImg.Dispose();
-            result.Dispose();
             return has;
         }
 
-        public Bitmap Invert(Bitmap bitmap)
+
+        //Делаем и возращаем скриншот заданной области
+        public Bitmap getScreen()
         {
-            int X;
-            int Y;
-            for (X = 0; X < bitmap.Width; X++)
-            {
-                for (Y = 0; Y < bitmap.Height; Y++)
-                {
-                    Color oldColor = bitmap.GetPixel(X, Y);
-                    Color newColor;
-                    newColor = Color.FromArgb(oldColor.A, 255 - oldColor.R, 255 - oldColor.G, 255 - oldColor.B);
-                    bitmap.SetPixel(X, Y, newColor);
-                    Application.DoEvents();
-                }
-            }
-            return bitmap;
+            Bitmap bmp = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height); //PixelFormat.Format32bppArgb);
+            Graphics graph = Graphics.FromImage(bmp);
+            graph.CopyFromScreen(0, 0, 0, 0, bmp.Size);
+            graph.Dispose();
+            return bmp;
         }
     }
 }

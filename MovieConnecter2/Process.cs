@@ -9,7 +9,7 @@ namespace MovieConnecter2
     class Process
     {
         public HashImage hash = new HashImage();
-
+        public bool isProcess = true;
         public Process()
         {
 
@@ -17,9 +17,9 @@ namespace MovieConnecter2
 
         public void startProcess()
         {
-            while (true)
+            while (isProcess)
             {
-                int has = hash.getHashScreen();
+                long has = hash.getHashScreen();
                 Console.WriteLine(has);
             }
         }
