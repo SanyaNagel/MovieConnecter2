@@ -72,7 +72,9 @@ namespace MovieConnecter2
                     Width = x - X;
                     Height = Y - y;
                     x = X;
-                }else if(checkingTimer())  //Проверка на читаемость таймера
+                }
+
+                if(checkingTimer())  //Проверка на читаемость таймера
                 {
                     Console.WriteLine("Отлично, таймер найден!");
                 }
@@ -87,7 +89,7 @@ namespace MovieConnecter2
         public bool checkingTimer()
         {
             String time = readScreen(getScreen());
-
+            Console.WriteLine(time);
             //Здесь проверить на корректность
 
             return true;
@@ -99,7 +101,7 @@ namespace MovieConnecter2
             Bitmap bmp = new Bitmap(Width, Height); //PixelFormat.Format32bppArgb);
             Graphics graph = Graphics.FromImage(bmp);
             graph.CopyFromScreen(x, y, 0, 0, bmp.Size);
-
+            Invert(bmp);
             bmp.Save("filename.jpg");   ///////////////////Потом убрать///////////////////////
 
             graph.Dispose();
@@ -114,6 +116,24 @@ namespace MovieConnecter2
             String text = tesseract.GetUTF8Text();
             tesseract.Dispose();    //Очистка памяти
             return text;
+        }
+
+        public Bitmap Invert(Bitmap bitmap)
+        {
+            int X;
+            int Y;
+            for (X = 0; X < bitmap.Width; X++)
+            {
+                for (Y = 0; Y < bitmap.Height; Y++)
+                {
+                    Color oldColor = bitmap.GetPixel(X, Y);
+                    Color newColor;
+                    newColor = Color.FromArgb(oldColor.A, 255 - oldColor.R, 255 - oldColor.G, 255 - oldColor.B);
+                    bitmap.SetPixel(X, Y, newColor);
+                    Application.DoEvents();
+                }
+            }
+            return bitmap;
         }
     }
 }
