@@ -15,6 +15,10 @@ using System.Windows.Shapes;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net;
+using Newtonsoft.Json.Linq;
 
 namespace MovieConnecter2
 {
@@ -38,14 +42,19 @@ namespace MovieConnecter2
         private static IntPtr hhook = IntPtr.Zero;
 
         //private static CurrentTime currentTime = new CurrentTime();
-        private static Process process = new Process();
+        private static Process process;
         private static Thread myThread;
+        private string hostLocal = "http://localhost:8080";
+        private string hostGlobal = "https://movieconnecter.herokuapp.com";
+        public string currentHost = "";
         public MainWindow()
         {
             InitializeComponent();
+            currentHost = hostGlobal;
             IntPtr hInstance = LoadLibrary("User32");
             hhook = SetWindowsHookEx(WH_KEYBOARD_LL, _proc, hInstance, 0);
-            
+            process = new Process();
+            process.mainWindow = this;
         }
 
         ~MainWindow()
@@ -53,9 +62,10 @@ namespace MovieConnecter2
             UnhookWindowsHookEx(hhook);   //убираем хук
         }
 
+        //Кнопка создания комнаты
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //currentTime.getScreen();
+             process.CreatRoom("Александр");
         }
 
 
@@ -73,8 +83,7 @@ namespace MovieConnecter2
                 }else if(vkCode == 161) //Нажат правый шифт
                 {
                     if (flagStart == true)
-                    {
-                        //Запуск отправки хешей
+                    {//Запуск отправки хешей
                         myThread = new Thread(process.startProcess); //Создаем новый объект потока (Thread)
                         myThread.Start(); //запускаем поток
                         flagStart = false;
@@ -94,6 +103,47 @@ namespace MovieConnecter2
             }
             else
                 return CallNextHookEx(hhook, code, (int)wParam, lParam);
+        }
+
+        //Кнопка отладки
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            debAsync();
+        }
+        //Отладка - отображение всех щэшей пользователей комнаты
+        public async Task debAsync()
+        {   
+            WebRequest request = WebRequest.Create(currentHost+"/server/view/" + boxCodeRoom.Text);
+            request.Method = "POST";
+            WebResponse response = await request.GetResponseAsync();
+
+          
+            response.Close();
+        }
+       
+        //Подключение к комнате и регистрация пользователя
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            connectUserToRoom();
+        }
+
+        //Подключение к комнате и регистрация пользователя
+        public async Task connectUserToRoom()
+        {
+            WebRequest request = WebRequest.Create(currentHost+"/server/login/" + boxCodeRoom.Text + "/" + NameUser.Content);
+            request.Method = "POST";
+            WebResponse response = await request.GetResponseAsync();
+
+            using (Stream stream = response.GetResponseStream())
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    JObject json = JObject.Parse(reader.ReadToEnd());
+                    userID.Content = json["id"].ToString();
+                }
+            }
+            response.Close();
+
         }
     }
 }

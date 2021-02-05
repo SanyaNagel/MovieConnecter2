@@ -7,7 +7,15 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Content="Button" Click="Button_Click" HorizontalAlignment="Left" Margin="283,207,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Создать комнату" Click="Button_Click" HorizontalAlignment="Left" Margin="652,335,0,0" VerticalAlignment="Top" Width="109" Height="44"/>
+        <TextBox x:Name="boxCodeRoom" HorizontalAlignment="Left" Height="23" Margin="652,292,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="109"/>
+        <Label Content="User ID: " HorizontalAlignment="Left" Margin="652,266,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="userID" HorizontalAlignment="Left" Margin="707,266,0,0" VerticalAlignment="Top"/>
+        <Button Content="Отладка" Click="Button_Click_1"  HorizontalAlignment="Left" Margin="390,335,0,0" VerticalAlignment="Top" Width="109" Height="44"/>
+        <Button Content="Подключение" Click="Button_Click_2"  HorizontalAlignment="Left" Margin="522,335,0,0" VerticalAlignment="Top" Width="109" Height="44"/>
+        <Label Content="Имя:" HorizontalAlignment="Left" Margin="666,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Александр" x:Name="NameUser" HorizontalAlignment="Left" Margin="702,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Статус" x:Name="Status" HorizontalAlignment="Left" Margin="531,60,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>
