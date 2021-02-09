@@ -83,14 +83,16 @@ namespace MovieConnecter2
                 }else if(vkCode == 161) //Нажат правый шифт
                 {
                     if (flagStart == true)
-                    {//Запуск отправки хешей
-                        myThread = new Thread(process.startProcess); //Создаем новый объект потока (Thread)
+                    {
+                        _ = process.setReadyOnServer(true);             //Статус готовности "готов"    
+                        myThread = new Thread(process.startProcess);    //Создаем новый объект потока (Thread)
                         myThread.Start(); //запускаем поток
                         flagStart = false;
                     }
                     else
                     {
                         flagStart = true;
+                        _ = process.setReadyOnServer(false);    //Отмена готовности
                         myThread.Abort();
                     }
                 }
@@ -108,43 +110,16 @@ namespace MovieConnecter2
         //Кнопка отладки
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            debAsync();
-        }
-        //Отладка - отображение всех щэшей пользователей комнаты
-        public async Task debAsync()
-        {   
-            WebRequest request = WebRequest.Create(currentHost+"/server/view/" + boxCodeRoom.Text);
-            request.Method = "POST";
-            WebResponse response = await request.GetResponseAsync();
-
-          
-            response.Close();
+            _ = process.debAsync();
         }
        
         //Подключение к комнате и регистрация пользователя
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            connectUserToRoom();
+            _ = process.connectUserToRoom();
         }
 
-        //Подключение к комнате и регистрация пользователя
-        public async Task connectUserToRoom()
-        {
-            WebRequest request = WebRequest.Create(currentHost+"/server/login/" + boxCodeRoom.Text + "/" + NameUser.Content);
-            request.Method = "POST";
-            WebResponse response = await request.GetResponseAsync();
-
-            using (Stream stream = response.GetResponseStream())
-            {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    JObject json = JObject.Parse(reader.ReadToEnd());
-                    userID.Content = json["id"].ToString();
-                }
-            }
-            response.Close();
-
-        }
+        
     }
 }
     

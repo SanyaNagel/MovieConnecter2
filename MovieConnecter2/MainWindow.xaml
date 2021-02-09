@@ -15,7 +15,8 @@
         <Button Content="Подключение" Click="Button_Click_2"  HorizontalAlignment="Left" Margin="522,335,0,0" VerticalAlignment="Top" Width="109" Height="44"/>
         <Label Content="Имя:" HorizontalAlignment="Left" Margin="666,10,0,0" VerticalAlignment="Top"/>
         <Label Content="Александр" x:Name="NameUser" HorizontalAlignment="Left" Margin="702,10,0,0" VerticalAlignment="Top"/>
-        <Label Content="Статус" x:Name="Status" HorizontalAlignment="Left" Margin="531,60,0,0" VerticalAlignment="Top"/>
+        <Label Content="Статус" x:Name="Status" HorizontalAlignment="Left" Margin="672,41,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="debugView" HorizontalAlignment="Left" Height="305" Margin="10,10,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="621"/>
 
     </Grid>
 </Window>
