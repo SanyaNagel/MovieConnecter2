@@ -70,7 +70,7 @@ namespace MovieConnecter2
         //Кнопка создания комнаты
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            process.CreateRoom("Александр");
+            process.createRoom("Александр");
         }
 
 

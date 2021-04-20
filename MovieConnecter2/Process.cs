@@ -84,7 +84,7 @@ namespace MovieConnecter2
 
 
         //Создаём комнату получаем свой ID и код комнаты
-        public async void CreateRoom(String name)
+        public async void createRoom(String name)
         {
             WebRequest request = WebRequest.Create(mainWindow.currentHost + "/server/createRoom/" + name);
             request.Method = "POST";
