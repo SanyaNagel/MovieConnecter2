@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using MovieConnecter2.Hash;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MovieConnecter2
 {
@@ -17,7 +19,7 @@ namespace MovieConnecter2
     public delegate Task<JObject> BinaryOp(long hash);
     class Process
     {
-        public HashImage hash = new HashImage();
+        public HashImage hash = new SimpleHash();
         public bool isProcess = true;
         public MainWindow mainWindow;
         public string currentCommand = "Ожидаем готовности всех";
@@ -39,9 +41,23 @@ namespace MovieConnecter2
                         break;
 
                     case "Кидай хэш":
-                        long has = hash.getHashScreen();
+                        long has = hash.getHash();
                         Console.WriteLine(has);
                         setHash(has);
+                        break;
+
+                    case "Остановка":
+                        MainWindow.keybd_event(32, 0, 1, 0);
+                        setHash(-1);
+                        break;
+
+                    case "Запуск":
+                        MainWindow.keybd_event(32, 0, 1, 0);
+                        currentCommand = "Кидай хэш";
+                        break;
+
+                    case "Ожидаем синхронизации":
+                        setHash(-1);
                         break;
                 }
 
@@ -68,9 +84,9 @@ namespace MovieConnecter2
 
 
         //Создаём комнату получаем свой ID и код комнаты
-        public async void CreatRoom(String name)
+        public async void CreateRoom(String name)
         {
-            WebRequest request = WebRequest.Create(mainWindow.currentHost + "/server/creatRoom/" + name);
+            WebRequest request = WebRequest.Create(mainWindow.currentHost + "/server/createRoom/" + name);
             request.Method = "POST";
             WebResponse response = await request.GetResponseAsync();
 
@@ -153,10 +169,17 @@ namespace MovieConnecter2
         }
 
 
-        //Отладка - отображение всех щэшей пользователей комнаты
+        //Отладка - отображение всех хэшей пользователей комнаты
         public async Task debAsync()
         {
-            WebRequest request = WebRequest.Create(mainWindow.currentHost + "/server/view/" + mainWindow.boxCodeRoom.Text);
+            string chost ="";
+            string cRoom = "";
+            mainWindow.Dispatcher.Invoke(() =>
+            {
+                chost = mainWindow.currentHost;
+                cRoom = mainWindow.boxCodeRoom.Text;
+            });
+            WebRequest request = WebRequest.Create(chost + "/server/view/" + cRoom);
             JObject debux;
             request.Method = "POST";
             WebResponse response = await request.GetResponseAsync();
@@ -174,7 +197,6 @@ namespace MovieConnecter2
                 mainWindow.debugView.Text = debux["debux"].ToString();
             });
 
-            response.Close();
         }
     }
 }

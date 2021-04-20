@@ -19,6 +19,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net;
 using Newtonsoft.Json.Linq;
+using System.Windows.Forms;
 
 namespace MovieConnecter2
 {
@@ -27,6 +28,9 @@ namespace MovieConnecter2
     /// </summary>
     public partial class MainWindow : Window
     {
+        [DllImport("user32.dll")]
+        public static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
+
         [DllImport("user32.dll")]
         static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc callback, IntPtr hInstance, uint threadId);
         [DllImport("user32.dll")]
@@ -51,6 +55,7 @@ namespace MovieConnecter2
         {
             InitializeComponent();
             currentHost = hostGlobal;
+            //currentHost = hostLocal;
             IntPtr hInstance = LoadLibrary("User32");
             hhook = SetWindowsHookEx(WH_KEYBOARD_LL, _proc, hInstance, 0);
             process = new Process();
@@ -65,7 +70,7 @@ namespace MovieConnecter2
         //Кнопка создания комнаты
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-             process.CreatRoom("Александр");
+            process.CreateRoom("Александр");
         }
 
 
@@ -78,9 +83,11 @@ namespace MovieConnecter2
                 
                 if(vkCode == 163)   //Если правый контрл
                 {
+                    _ = process.debAsync();
                     //Получаем координаты курсора
                     //currentTime.setCoord(System.Windows.Forms.Cursor.Position.X, System.Windows.Forms.Cursor.Position.Y);
-                }else if(vkCode == 161) //Нажат правый шифт
+                }
+                else if(vkCode == 161) //Нажат правый шифт
                 {
                     if (flagStart == true)
                     {
@@ -119,7 +126,13 @@ namespace MovieConnecter2
             _ = process.connectUserToRoom();
         }
 
-        
+        internal Process _
+        {
+            get => default;
+            set
+            {
+            }
+        }
     }
 }
     
