@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
+using System.Collections;
 
 namespace MovieConnecter2.Hash
 {
@@ -13,15 +15,15 @@ namespace MovieConnecter2.Hash
 
         }
 
+        //Уменьшить размер
+        //Преобразовать в ЧБ
+        //Запуск дискретное косинусное преобразование DCT
+        //Сократить DCT
+        //Вычислить среднее значение
+        //Ещё сокращаем DCT
+        //Строим ХЭШ
         public override long getHash()
         {
-            //Уменьшить размер
-            //Преобразовать в ЧБ
-            //Запуск дискретное косинусное преобразование DCT
-            //Сократить DCT
-            //Вычислить среднее значение
-            //Ещё сокращаем DCT
-            //Строим ХЭШ
             return 0;
         }
     }

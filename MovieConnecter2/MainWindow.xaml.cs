@@ -126,13 +126,7 @@ namespace MovieConnecter2
             _ = process.connectUserToRoom();
         }
 
-        internal Process _
-        {
-            get => default;
-            set
-            {
-            }
-        }
+       
     }
 }
     
