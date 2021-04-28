@@ -15,7 +15,7 @@ namespace MovieConnecter2
         {
 
         }
-        public abstract long getHash();
+        public abstract string getHash();
 
         //Делаем и возращаем скриншот заданной области
         protected Bitmap getScreen()

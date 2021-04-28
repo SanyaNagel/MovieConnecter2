@@ -21,19 +21,16 @@ namespace MovieConnecter2.Hash
         //Вычислить среднее значение цвета для всех пикселей
         //Заменить пиксели на ч/б, в зависимости больше пиксель или меньше среднего
         //Построить хэш
-        public override long getHash()
+        public override string getHash()
         {
             int sizeBitmap = 8;
             Bitmap bmpImg1 = getScreen();                    //Получаем скрин экрана
             Bitmap bmpImg = resizeImage(bmpImg1, sizeBitmap, sizeBitmap);    //Уменьшаем размер
             bmpImg1.Dispose();
 
-            int count = 0;
             Color color;
-            BitArray bits = new BitArray(sizeBitmap * sizeBitmap);
-
+            string hash = "";
             SetGrayscale(bmpImg);   //Преобразование в градации серого
-            
             int middle = MiddleColor(bmpImg);
             for (int j = 0; j < bmpImg.Height; j++)
             {
@@ -41,15 +38,12 @@ namespace MovieConnecter2.Hash
                 {
                     color = bmpImg.GetPixel(i, j);
                     int K = (color.R + color.G + color.B) / 3;
-                    bits[count++] = K <= middle ? true : false;
+                    hash += K <= middle ? "1" : "0";
                 }
             }
             bmpImg.Dispose();
 
-            var bytes = new byte[8];
-            bits.CopyTo(bytes, 0);
-            long has = BitConverter.ToInt64(bytes, 0);
-            return has;
+            return hash;
         }
 
 

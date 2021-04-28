@@ -16,7 +16,7 @@ namespace MovieConnecter2
 {
     //Класс для связи с API сервера
 
-    public delegate Task<JObject> BinaryOp(long hash);
+    public delegate Task<JObject> BinaryOp(string hash);
     class Process
     {
         public HashImage hash = new SimpleHash();
@@ -37,18 +37,18 @@ namespace MovieConnecter2
                 switch (currentCommand)
                 {
                     case "Ожидаем готовности всех":
-                        setHash(-1);
+                        setHash("-1");
                         break;
 
                     case "Кидай хэш":
-                        long has = hash.getHash();
+                        string has = hash.getHash();
                         Console.WriteLine(has);
                         setHash(has);
                         break;
 
                     case "Остановка":
                         MainWindow.keybd_event(32, 0, 1, 0);
-                        setHash(-1);
+                        setHash("-1");
                         break;
 
                     case "Запуск":
@@ -57,7 +57,7 @@ namespace MovieConnecter2
                         break;
 
                     case "Ожидаем синхронизации":
-                        setHash(-1);
+                        setHash("-1");
                         break;
                 }
 
@@ -68,17 +68,17 @@ namespace MovieConnecter2
             }
         }
 
-        public void setHash(long has)
+        public void setHash(string has)
         {
             // Асинхронный вызов метода с применением делегата
             BinaryOp bo = setHashOnServerAsync;
             
             IAsyncResult ar = bo.BeginInvoke(has, null, null);
             Task<JObject> result = bo.EndInvoke(ar);
-            currentCommand = result.Result["command"].ToString();;
+            currentCommand = result.Result["command"].ToString();
             //Thread.Sleep(500);  //Ожидание пол секунды
 
-                //Console.WriteLine(result.Result["command"].ToString());
+                //Console.Wri  teLine(result.Result["command"].ToString());
             
         }
 
@@ -140,7 +140,7 @@ namespace MovieConnecter2
 
 
         //Полностью асинхронно отправляем хэш
-        public async Task<JObject> setHashOnServerAsync(long hash)
+        public async Task<JObject> setHashOnServerAsync(string hash)
         {
             string zapros = "";
             mainWindow.Dispatcher.Invoke(() =>

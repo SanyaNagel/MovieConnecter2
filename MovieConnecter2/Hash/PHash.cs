@@ -22,9 +22,9 @@ namespace MovieConnecter2.Hash
         //Вычислить среднее значение
         //Ещё сокращаем DCT
         //Строим ХЭШ
-        public override long getHash()
+        public override string getHash()
         {
-            return 0;
+            return "0";
         }
     }
 }
